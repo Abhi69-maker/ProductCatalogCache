@@ -5,6 +5,9 @@ import com.app.springdatajpa.turtorial.productcatalogcachesystem.Repositary.Prod
 import com.app.springdatajpa.turtorial.productcatalogcachesystem.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,17 +19,28 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    private void simulateSlowDbCall() {
+        try {
+            Thread.sleep(500);
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
     public List<Product> getAllProducts() {
 
         log.info("Getting all products");
+        simulateSlowDbCall();
 
         return productRepository.findAll();
     }
-
+    @Cacheable(value = "products",key="#id")
     public Product getProductById(Integer id) {
 
+
         log.info("Getting product by ID {}", id);
+        simulateSlowDbCall();
 
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("product not found"));
@@ -45,9 +59,10 @@ public class ProductService {
 
         return productRepository.save(product);
     }
-
+    @CachePut(value = "products",key = "#id")
     public Product updateProductById(ProductDTO productDTO, Integer id) {
         log.info("Updating product {}", productDTO.getName());
+        simulateSlowDbCall();
 
         Product existing = getProductById(id);
 
@@ -61,10 +76,11 @@ public class ProductService {
 
 
     }
-
+    @CacheEvict(value = "products",key = "#id")
     public String deleteProductByID(Integer id) {
 
         log.info("Deleting product by ID {}", id);
+        simulateSlowDbCall();
 
         productRepository.deleteById(id);
 
