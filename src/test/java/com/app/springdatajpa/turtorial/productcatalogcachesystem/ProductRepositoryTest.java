@@ -1,7 +1,7 @@
 package com.app.springdatajpa.turtorial.productcatalogcachesystem;
 
 import com.app.springdatajpa.turtorial.productcatalogcachesystem.Entity.Product;
-import com.app.springdatajpa.turtorial.productcatalogcachesystem.Repositary.productrepositary;
+import com.app.springdatajpa.turtorial.productcatalogcachesystem.Repositary.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,10 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-public class Productrepositarytest {
+public class ProductRepositoryTest {
 
     @Autowired
-    productrepositary Productrepositary ;
+    ProductRepository Productrepositary ;
 
     @Test
     void testSaveProduct(){
